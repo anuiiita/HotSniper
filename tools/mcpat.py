@@ -621,6 +621,8 @@ def power_stack(power_dat, cfg, powertype = 'total',  nocollapse = False):
    PeakTemperatureLogFileName = file(os.path.join(
      sniper_config.get_config(cfg, "general/output_dir"),"PeakTemperature.log"), 'w')
    PeakTemperatureLogFileName.write (Headings+"\n")
+   PeakTemperatureLogFileName.close()
+
    
    periodic_power_logs(sniper_config.get_config(cfg, "general/output_dir"))
    matex_dir = os.path.dirname(__file__)
@@ -633,7 +635,8 @@ def power_stack(power_dat, cfg, powertype = 'total',  nocollapse = False):
 
    floorplan = os.path.abspath(os.path.join(matex_dir, sniper_config.get_config(cfg, "periodic_thermal/floorplan")))
    matex_cmd = matex_binary + ' -c ' + matex_config + ' -f ' + floorplan + ' -p ' + power_logs + ' > ' + matex_output
-   subprocess.Popen(matex_cmd, shell=True)
+   matex_proc = subprocess.Popen(matex_cmd, shell=True)
+   matex_proc.wait()
 
 
    #HotSpot Integration Code
